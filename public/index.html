@@ -12,11 +12,16 @@
   <meta name="apple-mobile-web-app-title" content="Mana" />
   <script>
     // Pre-hydrate theme so dark mode never flashes white on refresh.
-    // Runs synchronously before CSS/JS modules load.
+    // Runs synchronously before CSS/JS modules load. For "auto" we can't run
+    // the sun calc this early, so we trust the resolved bool the app cached
+    // last time (cockpit.theme.dark); the app re-resolves and corrects on boot.
     try {
-      var t = localStorage.getItem("cockpit.theme");
-      if (t === "dark" || t === "light")
-        document.documentElement.dataset.theme = t;
+      var t = localStorage.getItem("cockpit.theme") || "auto";
+      var dark =
+        t === "dark" ? true
+        : t === "light" ? false
+        : localStorage.getItem("cockpit.theme.dark") === "1";
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
     } catch (e) {}
   </script>
   <style>
@@ -29,8 +34,8 @@
       background: #f5f3ed;
     }
   </style>
-  <script type="module" crossorigin src="/assets/index-D2K0ypwu.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BiELHLrK.css">
+  <script type="module" crossorigin src="/assets/index-D2TuMT6p.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CTwFxmXt.css">
 </head>
 <body>
   <mana-app></mana-app>
